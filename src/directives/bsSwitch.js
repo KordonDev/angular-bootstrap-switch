@@ -5,6 +5,9 @@ angular.module('frapontillo.bootstrap-switch')
     return {
       restrict: 'A',
       require: 'ngModel',
+      scope: {
+        'switchChanged': '&'
+      },
       link: function link(scope, element, attrs, controller) {
         var isInit = false;
 
@@ -208,7 +211,7 @@ angular.module('frapontillo.bootstrap-switch')
         var listenToView = function () {
           if (attrs.type === 'radio') {
             // when the switch is clicked
-            element.on('change.bootstrapSwitch', function (e) {
+            element.on('change.bootstrapSwitch', function (e, state) {
               // discard not real change events
               if ((controller.$modelValue === controller.$viewValue) && (e.target.checked !== $(e.target).bootstrapSwitch('state'))) {
                 // $setViewValue --> $viewValue --> $parsers --> $modelValue
@@ -220,13 +223,15 @@ angular.module('frapontillo.bootstrap-switch')
                   // otherwise if it's been deselected, delete the view value
                   controller.$setViewValue(undefined);
                 }
+                scope.switchChanged({state: state});
               }
             });
           } else {
             // When the checkbox switch is clicked, set its value into the ngModel
-            element.on('switchChange.bootstrapSwitch', function (e) {
+            element.on('switchChange.bootstrapSwitch', function (e, state) {
               // $setViewValue --> $viewValue --> $parsers --> $modelValue
               controller.$setViewValue(e.target.checked);
+              scope.switchChanged({state: state});
             });
           }
         };

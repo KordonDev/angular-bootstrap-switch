@@ -78,6 +78,7 @@
     bs-switch
     ng-model="isSelected"
     type="checkbox"
+    switch-changed="logChange(state)"
     switch-active="{{ isActive }}"
     switch-on-text="{{ onText }}"
     switch-off-text="{{ offText }}"
